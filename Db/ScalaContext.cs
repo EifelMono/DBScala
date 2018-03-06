@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace angular.Db
+namespace DbScala.Db
 {
     public class ScalaContext : DbContext
     {

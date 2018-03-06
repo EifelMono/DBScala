@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace angular.Db
+namespace DbScala.Db
 {
     [Table("TARTICLE")]
     public class Article
@@ -18,8 +18,17 @@ namespace angular.Db
         public int CodeType { get; set; }
         [Column("FNAME")]
         public string Name { get; set; }
+
         [Column("FPSEUDO")]
         public int Pseudo { get; set; }
+
+        [Column("FTYP")]
+        public string Typ{ get; set; }
+
+        [Column("FUNIT")]
+        public string Unit{ get; set; }
+
+
         [Key]
         [Column("FID")]
         public int Id { get; set; }

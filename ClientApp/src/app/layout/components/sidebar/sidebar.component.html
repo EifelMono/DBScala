@@ -3,14 +3,14 @@
         <a routerLink="/dashboard" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'Dashboard' | translate }}
         </a>
-        <a [routerLink]="['/article-page']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-            <i class="fa fa-th-list"></i>&nbsp;Article
+        <a [routerLink]="['/articles-page']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-th-list"></i>&nbsp;Articles
+        </a>
+        <a [routerLink]="['/tenants-page']" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-th-list"></i>&nbsp;Tenants
         </a>
         <a [routerLink]="['/upload-page']" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-upload"></i>&nbsp;Upload
-        </a>
-        <a [routerLink]="['/fetch-page']" [routerLinkActive]="['router-link-active']" class="list-group-item">
-            <i class="fa fa-th-list"></i>&nbsp;Fetch
         </a>
         <a href="/swagger" target="_blank" class="list-group-item more-themes">
             <i class="fa fa-briefcase"></i>&nbsp;Swagger

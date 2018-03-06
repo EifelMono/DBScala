@@ -1,0 +1,42 @@
+<div [@routerTransition]>
+        <app-page-header [heading]="'Articles'" [icon]="'fa-users'"></app-page-header>
+        <br>
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-3">
+                    <div class="card-header">
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button" (click)="keyDownSearchArticle(null)">Search</button>
+                            </div>
+                            <input [(ngModel)]="searchArticle" (keydown)="keyDownSearchArticle($event)" class="form-control text-primary" type="text">
+                        </div>
+                        <div *ngIf="tableResult">
+                            <br>
+                            <b>[{{ tableResult.pageIndex }}/{{ tableResult.pages}}] [{{ tableResult.pageSize}}]</b>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div *ngIf="tableResult">
+                    <div class="card mb-3" *ngFor="let article of tableResult.data">
+                        <div class="card-header bg-secondary text-white">
+                            <h4>{{ article.name }}</h4>
+                        </div>
+                        <div class="card-body">
+                            {{ article.code }} {{ article.typ }} {{ article.unit }}
+                        </div>
+                        <div class="card-footer">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -2,25 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using angular.Db;
+using DbScala.Db;
 using Microsoft.AspNetCore.Mvc;
 
-namespace angular.Controllers
+namespace DbScala.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/db")]
     public class DbController : Controller
     {
 
-        [HttpGet("[action]")]
-        public TableResult<Article> GetArticleByName([FromQuery] string searchName, [FromQuery] int pageIndex = 0, int pageSize = 100)
+        [HttpGet("getarticlesbyname")]
+        public TableResult<Article> GetArticlesByName([FromQuery] string searchname, [FromQuery] int pageindex = 0, int pagesize = 100)
         {
-            var data = ScalaContext.Instance.Articles.Where((a) => a.Name.Contains(searchName));
+            var data = ScalaContext.Instance.Articles.Where((a) => string.IsNullOrEmpty(searchname)? true: a.Name.Contains(searchname));
             return new TableResult<Article>
             {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                Pages = (int)Math.Ceiling((double)data.Count() / (double)pageSize),
-                Data = data.Skip(pageIndex * pageSize).Take(pageSize)
+                PageIndex = pageindex,
+                PageSize = pagesize,
+                Pages = (int)Math.Ceiling((double)data.Count() / (double)pagesize),
+                Data = data.Skip(pageindex * pagesize).Take(pagesize)
+            };
+        }
+
+        [HttpGet("gettenants")]
+        public TableResult<Tenant> GetTenants()
+        {
+            return new TableResult<Tenant>
+            {
+                Data = ScalaContext.Instance.Tenants
             };
         }
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace angular.Db
+namespace DbScala.Db
 {
     public class TableResult<T> where T: class
     {
