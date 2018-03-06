@@ -10,7 +10,7 @@ import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
 })
 export class UploadPageComponent implements OnInit {
     fileToUpload: File = null;
-    S
+    fileChangeEvent: any;
 
     constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
     }
@@ -18,6 +18,7 @@ export class UploadPageComponent implements OnInit {
     ngOnInit() { }
 
     onFileChange(event: any) {
+        this.fileChangeEvent = event;
         let fi = event.srcElement;
         if (fi.files && fi.files[0]) {
             let fileToUpload = fi.files[0];
@@ -27,9 +28,28 @@ export class UploadPageComponent implements OnInit {
 
             const httpOptions = {
                 headers: new HttpHeaders({
-                  'Accept': 'application/json',
+                    'Accept': 'application/json',
                 })
-              };
+            };
+
+            this.http.post(this.baseUrl + "api/db/uploaddb/", formData, httpOptions)
+                .subscribe(r => console.log(r));
+        }
+    }
+
+    onUpload() {
+        let fi = this.fileChangeEvent.srcElement;
+        if (fi.files && fi.files[0]) {
+            let fileToUpload = fi.files[0];
+
+            let formData: FormData = new FormData();
+            formData.append(fileToUpload.name, fileToUpload);
+
+            const httpOptions = {
+                headers: new HttpHeaders({
+                    'Accept': 'application/json',
+                })
+            };
 
             this.http.post(this.baseUrl + "api/db/uploaddb/", formData, httpOptions)
                 .subscribe(r => console.log(r));
