@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
 
 @Component({
     selector: 'app-upload-page',
@@ -8,7 +9,30 @@ import { routerTransition } from '../../router.animations';
     animations: [routerTransition()]
 })
 export class UploadPageComponent implements OnInit {
-    constructor() {}
+    fileToUpload: File = null;
+    S
 
-    ngOnInit() {}
+    constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string) {
+    }
+
+    ngOnInit() { }
+
+    onFileChange(event: any) {
+        let fi = event.srcElement;
+        if (fi.files && fi.files[0]) {
+            let fileToUpload = fi.files[0];
+
+            let formData: FormData = new FormData();
+            formData.append(fileToUpload.name, fileToUpload);
+
+            const httpOptions = {
+                headers: new HttpHeaders({
+                  'Accept': 'application/json',
+                })
+              };
+
+            this.http.post(this.baseUrl + "api/db/uploaddb/", formData, httpOptions)
+                .subscribe(r => console.log(r));
+        }
+    }
 }

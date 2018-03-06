@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DbScala.Db;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DbScala.Controllers
@@ -31,6 +33,34 @@ namespace DbScala.Controllers
             {
                 Data = ScalaContext.Instance.Tenants
             };
+        }
+
+        [HttpPost("uploaddb")]
+        public async Task<IActionResult> UpLoadDB()
+        {
+            try
+            {
+                var files = Request.Form.Files;
+
+                foreach (var file in files)
+                {
+                    Console.WriteLine(file.FileName);
+                    ScalaContext.Unload();
+                    if (file.Length > 0)
+                    {
+                        using (var fileStream = new FileStream(ScalaContext.DataFilename, FileMode.Create))
+                        {
+                            await file.CopyToAsync(fileStream);
+                        }
+                    }
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return BadRequest();
+            }
         }
     }
 }

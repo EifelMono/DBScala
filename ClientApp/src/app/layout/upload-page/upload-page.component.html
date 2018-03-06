@@ -7,9 +7,13 @@
                     Upload-Page
                 </div>
                 <div class="card-body">
+                        <div class="form-group" >
+                                <label for="file">Choose File</label>
+                                <input type="file" class="form-control" name="documents" id="file" (change)="onFileChange($event)"/>
+                            </div>
                 </div>
                 <div class="card-footer">
-                    <button class="btn btn-info btn-sm" >Button</button>
+                    <button class="btn btn-info btn-sm" >Upload</button>
                 </div>
             </div>
         </div>
