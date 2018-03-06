@@ -10,54 +10,46 @@ var target = Argument<string>("target", "Default");
 // Osx: osx-x64
 // Windows: win-x64
 // Linux: ubuntu-x64, rhel-x64, opensuse-x64
-var runtime = Argument<string>("runtime", "");
+var runtime = Argument<string>("runtime", "win-x64");
 var defaultProjectName= System.IO.Path.GetFileNameWithoutExtension(GetFiles("./*.sln").FirstOrDefault().ToString());
 var projectName= Argument<string>("projectname", defaultProjectName); 
 var sln= $"./{projectName}.sln";
 var dist= "./dist";
 
+
+void BuildWithRuntime(string localRuntime)
+{
+    Information($"Build runtime={localRuntime}");
+    CleanDirectory(dist);
+    DotNetCoreRestore(sln);
+    DotNetCorePublish(sln, new DotNetCorePublishSettings{
+        Configuration = "Release",
+        OutputDirectory = dist,
+        ArgumentCustomization= (arg)=> arg.Append("--self-contained")   
+                                           .Append($"--runtime {localRuntime}")
+        });
+}
+
+void ZipWithRuntime(string localRuntime)
+{
+    Information($"Zip runtime={localRuntime}");
+    foreach(var zipfile in GetFiles("./*.zip"))
+            DeleteFile(zipfile);
+    var file = MakeAbsolute(Directory(dist))+ $"/{projectName}.dll";
+    var version= GetVersionNumber(file);
+    Information($"{projectName}.{version}.{localRuntime}.zip");
+    Zip(dist, $"{projectName}.{version}.{localRuntime}.zip");
+}
+
+
 Task("BuildIt")
     .Does(() => {
-        if (string.IsNullOrEmpty(runtime))
-        {
-            System.OperatingSystem os = System.Environment.OSVersion;
-            System.PlatformID pid = os.Platform;
-            Information($"Build pid={pid}");
-            // THIS DOES NOT WORK Correct
-            // ON UNIX I NEED MacOSX for Test!
-            switch(pid)
-            {
-                case System.PlatformID.Unix:
-                case System.PlatformID.MacOSX:
-                    runtime = "osx-x64";
-                    break;
-                //case System.PlatformID.Unix:
-                //    runtime = "ubuntu-x64";
-                //    break;
-                default:
-                    runtime = "win-x64";
-                    break;
-            }
-        }
-        Information($"Build runtime={runtime}");
-        CleanDirectory(dist);
-        DotNetCoreRestore(sln);
-        DotNetCorePublish(sln, new DotNetCorePublishSettings{
-            Configuration = "Release",
-            OutputDirectory = dist,
-            ArgumentCustomization= (arg)=> arg.Append("--self-contained")   
-                                                .Append($"--runtime {runtime}")
-        });
+        BuildWithRuntime(runtime);
     });
 
 Task("ZipIt")
     .Does(() => {
-        foreach(var zipfile in GetFiles("./*.zip"))
-            DeleteFile(zipfile);
-        var file = MakeAbsolute(Directory(dist))+ $"/{projectName}.dll";
-        var version= GetVersionNumber(file);
-        Information($"{projectName}.{version}.zip");
-        Zip(dist, $"{projectName}.{version}.zip");
+        ZipWithRuntime(runtime);
     });    
 
 Task("Build")
@@ -75,6 +67,15 @@ Task("DefaultBuild")
     .IsDependentOn("Build")
     .IsDependentOn("Zip")
     .Does(() => {
+    });
+
+Task("BuildAll")
+    .Does(() => {
+        foreach(var localRuntime in new string [] {"win-x64", "osx-x64", "ubuntu-x64" })
+        {
+             BuildWithRuntime(localRuntime);
+             ZipWithRuntime(localRuntime);
+        }
     });
 
 #endregion
@@ -144,6 +145,9 @@ Task("Default")
 // Build
 // build.sh or build.ps1
 // creates the DotNetCore with angular
+
+// Add Build all Runtimes
+// build.sh or build.ps1 --target=BuildAll
 
 // Add Layout
 // build.sh or build.ps1 --target=Ng --create=layout --name=abc
