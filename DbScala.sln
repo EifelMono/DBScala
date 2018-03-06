@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "angular", "angular.csproj", "{AF882A35-DC48-4AFD-952C-67482DF514A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbScala", "DbScala.csproj", "{AF882A35-DC48-4AFD-952C-67482DF514A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

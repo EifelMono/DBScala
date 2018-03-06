@@ -33,12 +33,13 @@ void BuildWithRuntime(string localRuntime)
 void ZipWithRuntime(string localRuntime)
 {
     Information($"Zip runtime={localRuntime}");
-    foreach(var zipfile in GetFiles("./*.zip"))
-            DeleteFile(zipfile);
     var file = MakeAbsolute(Directory(dist))+ $"/{projectName}.dll";
     var version= GetVersionNumber(file);
-    Information($"{projectName}.{version}.{localRuntime}.zip");
-    Zip(dist, $"{projectName}.{version}.{localRuntime}.zip");
+    var zipFilename=$"{projectName}.{version}.{localRuntime}.zip"; 
+    if (System.IO.File.Exists(zipFilename))
+        System.IO.File.Delete(zipFilename);
+    Information(zipFilename);
+    Zip(dist, zipFilename);
 }
 
 
